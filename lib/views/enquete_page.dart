@@ -30,7 +30,7 @@ class _EnquetePageState extends State<EnquetePage> {
       return RatingBar.builder(
           initialRating: 3,
           itemCount: 5,
-          itemSize: 60,
+          itemSize: 80,
           itemPadding: const EdgeInsets.all(5),
           glow: false,
           itemBuilder: (context, index) {
@@ -57,60 +57,52 @@ class _EnquetePageState extends State<EnquetePage> {
             });
           }));
     } else if (_controller.enquete.value[index].tipoQuestao == 'YESORNO') {
-      return SizedBox(
-        width: 200,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 35,
-              margin: const EdgeInsets.only(right: 20, top: 20),
-              child: ElevatedButton(
-                  onPressed: () {
-                    print('NÃO');
-                    yesornoEnquete = 'NÃO';
-                    _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease);
-                  },
-                  child: const Text('NÃO')),
-            ),
-            Container(
-              width: 80,
-              height: 35,
-              margin: const EdgeInsets.only(left: 20, top: 20),
-              child: ElevatedButton(
-                  onPressed: () {
-                    print('SIM');
-                    yesornoEnquete = 'SIM';
-                    _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease);
-                  },
-                  child: const Text('SIM')),
-            )
-          ],
-        ),
-      );
-    } else if (_controller.enquete.value[index].tipoQuestao == 'INPUT') {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          SizedBox(
-              width: 300,
-              child: TextField(
-                controller: _editingController,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white))),
-                onChanged: (value) => setState(() {
-                  _enableButton = true;
-                }),
-              )),
+          Container(
+            width: 120,
+            height: 60,
+            margin: const EdgeInsets.only(right: 20, top: 20),
+            child: ElevatedButton(
+                onPressed: () {
+                  print('NÃO');
+                  yesornoEnquete = 'NÃO';
+                  _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease);
+                },
+                child: const Text('NÃO')),
+          ),
+          Container(
+            width: 120,
+            height: 60,
+            margin: const EdgeInsets.only(left: 20, top: 20),
+            child: ElevatedButton(
+                onPressed: () {
+                  print('SIM');
+                  yesornoEnquete = 'SIM';
+                  _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.ease);
+                },
+                child: const Text('SIM')),
+          )
         ],
       );
+    } else if (_controller.enquete.value[index].tipoQuestao == 'INPUT') {
+      return SizedBox(
+          width: 400,
+          child: TextField(
+            controller: _editingController,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white))),
+            onChanged: (value) => setState(() {
+              _enableButton = true;
+            }),
+          ));
     }
   }
 
@@ -131,11 +123,11 @@ class _EnquetePageState extends State<EnquetePage> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _controller.enquete.value.length,
                     itemBuilder: (context, index) => Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 450,
-                          height: 300,
+                          width: 500,
+                          height: 400,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             color: const Color.fromRGBO(31, 38, 48, 1),
@@ -146,70 +138,61 @@ class _EnquetePageState extends State<EnquetePage> {
                               Text(
                                 _controller.enquete.value[index].questao,
                                 style: const TextStyle(
-                                    fontSize: 20, color: Colors.white),
+                                    fontSize: 30, color: Colors.white),
+                                textAlign: TextAlign.center,
                               ),
                               enqueteTipo(index),
                               _controller.enquete.value[index].tipoQuestao !=
                                       'YESORNO'
-                                  ? ElevatedButton(
-                                      onPressed: _enableButton
-                                          ? () {
-                                              if (index <
-                                                  _controller.enquete.value
-                                                          .length -
-                                                      1) {
-                                                _pageController.nextPage(
-                                                    duration: const Duration(
-                                                        milliseconds: 300),
-                                                    curve: Curves.ease);
-                                                print(_editingController.text);
-                                                _enableButton = false;
-                                                _editingController.text = '';
-                                              } else {
-                                                print(_editingController.text);
-                                                Navigator.of(context)
-                                                    .pushNamed('/confirmacao');
-                                              }
-                                            }
-                                          : null,
-                                      child: const Text('Confirmar'))
+                                  ? SizedBox(
+                                      width: 120,
+                                      height: 60,
+                                      child: ElevatedButton(
+                                          onPressed: _enableButton
+                                              ? () {
+                                                  if (index <
+                                                      _controller.enquete.value
+                                                              .length -
+                                                          1) {
+                                                    _pageController.nextPage(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    300),
+                                                        curve: Curves.ease);
+                                                    print(_editingController
+                                                        .text);
+                                                    _enableButton = false;
+                                                    _editingController.text =
+                                                        '';
+                                                  } else {
+                                                    print(_editingController
+                                                        .text);
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            '/confirmacao');
+                                                  }
+                                                }
+                                              : null,
+                                          child: const Text('Confirmar')),
+                                    )
                                   : Container()
-
-                              /* print(rating);
-            _pageController.nextPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.ease); */
-
-                              /* index < _controller.enquete.value.length - 1
-                                  ? ElevatedButton(
-                                      onPressed: () {
-                                        _pageController.nextPage(
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.ease);
-                                      },
-                                      child: const Text('Próximo'))
-                                  : ElevatedButton(
-                                      onPressed: () {
-                                        _pageController.nextPage(
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.ease);
-                                      },
-                                      child: const Text('Confirmar')), */
                             ],
                           ),
                         ),
                         index >= 1
-                            ? ElevatedButton(
-                                onPressed: () {
-                                  _editingController.text = '';
-                                  _pageController.previousPage(
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      curve: Curves.ease);
-                                },
-                                child: const Text('Voltar'))
+                            ? Container(
+                                margin: const EdgeInsets.only(top: 30),
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      _editingController.text = '';
+                                      _pageController.previousPage(
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          curve: Curves.ease);
+                                    },
+                                    child: const Text('Voltar')),
+                              )
                             : Container(),
                       ],
                     ),
