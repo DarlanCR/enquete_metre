@@ -6,7 +6,7 @@ class RespostaController {
   ValueNotifier<bool> isLoad = ValueNotifier<bool>(false);
 
   postResposta(
-      int idEnquete, int idEnqueteQuestao, String resposta, int nota) async {
+      int idEnquete, int idEnqueteQuestao, String? resposta, int? nota) async {
     Map<String, dynamic> respostaEnquete = {
       'idEnquete': idEnquete,
       'idEnqueteQuestao': idEnqueteQuestao,
@@ -23,6 +23,7 @@ class RespostaController {
       final response = await client.post(
           Uri.parse('http://localhost:8080/app/services/micro/enquete'),
           body: {jsonData});
+      print(jsonData);
       await Future.delayed(const Duration(seconds: 2));
     } finally {
       client.close();

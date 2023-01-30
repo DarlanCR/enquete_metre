@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Resposta {
   final int idEnquete;
   final int idEnqueteQuestao;
