@@ -162,10 +162,11 @@ class _EnquetePageState extends State<EnquetePage> {
                                                     duration: const Duration(
                                                         milliseconds: 300),
                                                     curve: Curves.ease);
-
+                                                print(_editingController.text);
                                                 _enableButton = false;
                                                 _editingController.text = '';
                                               } else {
+                                                print(_editingController.text);
                                                 Navigator.of(context)
                                                     .pushNamed('/confirmacao');
                                               }

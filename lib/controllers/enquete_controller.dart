@@ -22,24 +22,4 @@ class EnqueteController {
       isLoad.value = false;
     }
   }
-
-  postEnquete(
-      int idEnquete, int idEnqueteQuestao, String resposta, int nota) async {
-    final client = http.Client();
-    try {
-      final response = await client.post(
-          Uri.parse('http://localhost:8080/app/services/micro/enquete'),
-          body: {
-            'idEnquete': idEnquete,
-            'idEnqueteQuestao': idEnqueteQuestao,
-            'resposta': resposta,
-            'nota': nota
-          });
-      final encodeResponse = jsonEncode(response.body) as List;
-      enquete.value = encodeResponse.map((e) => Enquete.fromMap(e)).toList();
-      print(enquete);
-    } finally {
-      client.close();
-    }
-  }
 }
