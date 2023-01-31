@@ -5,7 +5,7 @@ class Resposta {
   final int idEnquete;
   final int idEnqueteQuestao;
   final String resposta;
-  final int nota;
+  final int? nota;
 
   Resposta(
       {required this.idEnquete,

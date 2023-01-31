@@ -19,7 +19,7 @@ class _EnquetePageState extends State<EnquetePage> {
   final PageController _pageController = PageController();
 
   List<Resposta> respostas = [];
-  int ratingEnquete = 3;
+  int? ratingEnquete;
   bool _enableButton = false;
 
   @override
