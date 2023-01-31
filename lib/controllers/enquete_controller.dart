@@ -12,11 +12,11 @@ class EnqueteController {
     final client = http.Client();
     try {
       isLoad.value = true;
-      final response = await client
-          .get(Uri.parse('http://localhost:8080/app/services/micro/enquete'));
+      final response = await client.get(
+          Uri.parse('http://192.168.100.8:8080/app/services/micro/enquete'));
       final decodeResponse = jsonDecode(response.body) as List;
       enquete.value = decodeResponse.map((e) => Enquete.fromMap(e)).toList();
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
     } finally {
       client.close();
       isLoad.value = false;

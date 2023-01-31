@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 
-class ConfirmacaoPage extends StatelessWidget {
+class ConfirmacaoPage extends StatefulWidget {
   const ConfirmacaoPage({super.key});
+
+  @override
+  State<ConfirmacaoPage> createState() => _ConfirmacaoPageState();
+}
+
+class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(
+        const Duration(seconds: 8), () => Navigator.of(context).pushNamed('/'));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,27 +29,23 @@ class ConfirmacaoPage extends StatelessWidget {
               color: const Color.fromRGBO(31, 38, 48, 1),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: const [
-                    Text(
-                      'A sua resposta foi salva',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                        'A sua opinião é importante para que possamos melhorar',
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
-                  ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'Obrigado',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 45,
+                      fontWeight: FontWeight.bold),
                 ),
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pushNamed('/'),
-                    child: const Text('Reiniciar'))
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    'A sua opinião é importante para que possamos melhorar',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ],
             ),
           ),

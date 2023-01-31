@@ -1,5 +1,7 @@
 import 'package:enquete/controllers/enquete_controller.dart';
+import 'package:enquete/controllers/resposta_controller.dart';
 import 'package:enquete/models/rating_model.dart';
+import 'package:enquete/models/resposta_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -12,10 +14,11 @@ class EnquetePage extends StatefulWidget {
 
 class _EnquetePageState extends State<EnquetePage> {
   final EnqueteController _controller = EnqueteController();
+  final RespostaController _respostaController = RespostaController();
   final TextEditingController _editingController = TextEditingController();
   final PageController _pageController = PageController();
-  String yesornoEnquete = '';
-  String inputEnquete = '';
+
+  List<Resposta> respostas = [];
   int ratingEnquete = 3;
   bool _enableButton = false;
 
@@ -23,6 +26,34 @@ class _EnquetePageState extends State<EnquetePage> {
   void initState() {
     _controller.getEnquete();
     super.initState();
+  }
+
+  Resposta adicionarMap(int index) {
+    return Resposta(
+      idEnquete: _controller.enquete.value[index].idEnquete,
+      idEnqueteQuestao: _controller.enquete.value[index].idEnqueteQuestao,
+      resposta: _editingController.text.trim(),
+      nota: ratingEnquete,
+    );
+  }
+
+  botaoConfirmar(int index) {
+    if (index < _controller.enquete.value.length - 1) {
+      var responseMap = adicionarMap(index);
+      print(responseMap);
+      respostas.add(responseMap);
+      _pageController.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
+
+      _enableButton = false;
+      _editingController.clear();
+    } else {
+      var responseMap = adicionarMap(index);
+      respostas.add(responseMap);
+      _respostaController.postResposta(respostas);
+      _editingController.clear();
+      Navigator.of(context).pushNamed('/confirmacao');
+    }
   }
 
   enqueteTipo(int index) {
@@ -66,11 +97,8 @@ class _EnquetePageState extends State<EnquetePage> {
             margin: const EdgeInsets.only(right: 20, top: 20),
             child: ElevatedButton(
                 onPressed: () {
-                  print('NÃO');
-                  yesornoEnquete = 'NÃO';
-                  _pageController.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.ease);
+                  _editingController.text = 'NÃO';
+                  botaoConfirmar(index);
                 },
                 child: const Text('NÃO')),
           ),
@@ -81,10 +109,8 @@ class _EnquetePageState extends State<EnquetePage> {
             child: ElevatedButton(
                 onPressed: () {
                   print('SIM');
-                  yesornoEnquete = 'SIM';
-                  _pageController.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.ease);
+                  _editingController.text = 'SIM';
+                  botaoConfirmar(index);
                 },
                 child: const Text('SIM')),
           )
@@ -150,28 +176,7 @@ class _EnquetePageState extends State<EnquetePage> {
                                       child: ElevatedButton(
                                           onPressed: _enableButton
                                               ? () {
-                                                  if (index <
-                                                      _controller.enquete.value
-                                                              .length -
-                                                          1) {
-                                                    _pageController.nextPage(
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    300),
-                                                        curve: Curves.ease);
-                                                    print(_editingController
-                                                        .text);
-                                                    _enableButton = false;
-                                                    _editingController.text =
-                                                        '';
-                                                  } else {
-                                                    print(_editingController
-                                                        .text);
-                                                    Navigator.of(context)
-                                                        .pushNamed(
-                                                            '/confirmacao');
-                                                  }
+                                                  botaoConfirmar(index);
                                                 }
                                               : null,
                                           child: const Text('Confirmar')),
@@ -185,7 +190,8 @@ class _EnquetePageState extends State<EnquetePage> {
                                 margin: const EdgeInsets.only(top: 30),
                                 child: ElevatedButton(
                                     onPressed: () {
-                                      _editingController.text = '';
+                                      respostas.removeLast();
+                                      _editingController.clear();
                                       _pageController.previousPage(
                                           duration:
                                               const Duration(milliseconds: 300),

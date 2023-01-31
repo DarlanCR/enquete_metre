@@ -1,32 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:enquete/dio/dio_config.dart';
+import 'package:enquete/models/resposta_model.dart';
+
 class RespostaController {
-  ValueNotifier<bool> isLoad = ValueNotifier<bool>(false);
-
-  postResposta(
-      int idEnquete, int idEnqueteQuestao, String resposta, int nota) async {
-    Map<String, dynamic> respostaEnquete = {
-      'idEnquete': idEnquete,
-      'idEnqueteQuestao': idEnqueteQuestao,
-      'resposta': resposta,
-      'nota': nota
-    };
-
-    List<Map<String, dynamic>> list = [respostaEnquete];
-    final client = http.Client();
-    var jsonData = jsonEncode(list);
+  postResposta(List<Resposta> enquete) async {
+    final client = Dio(DioClient.options);
+    var data = enquete.map((e) => e.toMap()).toList();
+    Map dataMap = {'data': data};
 
     try {
-      isLoad.value = true;
-      final response = await client.post(
-          Uri.parse('http://localhost:8080/app/services/micro/enquete'),
-          body: {jsonData});
-      await Future.delayed(const Duration(seconds: 2));
+      await client.post('', data: dataMap);
+      print(jsonEncode(enquete));
+    } catch (e) {
+      print(e);
     } finally {
       client.close();
-      isLoad.value = false;
     }
   }
 }
