@@ -6,5 +6,3 @@ iconRating(IconData icon, Color color) {
     color: color,
   );
 }
-
-

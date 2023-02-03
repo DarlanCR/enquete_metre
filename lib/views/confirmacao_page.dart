@@ -1,3 +1,4 @@
+import 'package:enquete/models/background_model.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmacaoPage extends StatefulWidget {
@@ -18,39 +19,40 @@ class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: const Color.fromRGBO(20, 21, 25, 1),
-        child: Center(
-          child: Container(
-            width: 450,
-            height: 300,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: const Color.fromRGBO(31, 38, 48, 1),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  'Obrigado',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 45,
-                      fontWeight: FontWeight.bold),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    'A sua opinião é importante para que possamos melhorar',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
+        body: Stack(
+      children: [
+        backgroundPage(),
+        const Center(
+          child: Icon(
+            Icons.sentiment_satisfied_outlined,
+            color: Color.fromARGB(255, 27, 51, 78),
+            size: 500,
           ),
         ),
-      ),
-    );
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                'Muito Obrigado!',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Text(
+                  'A sua opinião é muito importante para nós',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ));
   }
 }
