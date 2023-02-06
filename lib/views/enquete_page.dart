@@ -1,13 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:enquete/controllers/enquete_controller.dart';
 import 'package:enquete/controllers/resposta_controller.dart';
-import 'package:enquete/dio/dio_config.dart';
-import 'package:enquete/dio/shared_preference.dart';
 import 'package:enquete/models/background_model.dart';
 import 'package:enquete/models/icon_model.dart';
 import 'package:enquete/models/resposta_model.dart';
 import 'package:enquete/views/config_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class EnquetePage extends StatefulWidget {
@@ -18,11 +16,10 @@ class EnquetePage extends StatefulWidget {
 }
 
 class _EnquetePageState extends State<EnquetePage> {
-  final prefs = SharedPreferencesHelper().preferences;
-  late final Dio setting;
-  late final EnqueteController _controller;
-  late final RespostaController _respostaController;
-  final TextEditingController _editingController = TextEditingController(); 
+  final EnqueteController _controller = Modular.get();
+  final RespostaController _respostaController = Modular.get();
+
+  final TextEditingController _editingController = TextEditingController();
   final PageController _pageController = PageController();
 
   List<Resposta> respostas = [];
@@ -31,17 +28,14 @@ class _EnquetePageState extends State<EnquetePage> {
 
   @override
   void initState() {
-    setting = ApiService(prefs).dio;
-    _controller = EnqueteController(setting);
-    _respostaController = RespostaController(setting);
     load();
     super.initState();
   }
 
   load() async {
-    if (_controller.client.options.baseUrl != '') {
-      await _controller.getEnquete();
-    }
+    await Future.delayed(const Duration(seconds: 2));
+    await _controller.loadBaseUrl();
+    await _controller.getEnquete();
   }
 
   Resposta adicionarMap(int index) {
@@ -57,8 +51,7 @@ class _EnquetePageState extends State<EnquetePage> {
     if (index < _controller.enquete.value.length - 1) {
       var responseMap = adicionarMap(index);
       respostas.add(responseMap);
-      _pageController.nextPage(
-          duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
 
       _enableButton = false;
       _editingController.clear();
@@ -82,11 +75,9 @@ class _EnquetePageState extends State<EnquetePage> {
           itemBuilder: (context, index) {
             switch (index) {
               case 0:
-                return iconRating(
-                    Icons.sentiment_very_dissatisfied, Colors.red);
+                return iconRating(Icons.sentiment_very_dissatisfied, Colors.red);
               case 1:
-                return iconRating(
-                    Icons.sentiment_dissatisfied, Colors.redAccent);
+                return iconRating(Icons.sentiment_dissatisfied, Colors.redAccent);
               case 2:
                 return iconRating(Icons.sentiment_neutral, Colors.amber);
               case 3:
@@ -136,9 +127,8 @@ class _EnquetePageState extends State<EnquetePage> {
           child: TextField(
             controller: _editingController,
             style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white))),
+            decoration:
+                const InputDecoration(enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
             onChanged: (value) => setState(() {
               _enableButton = true;
             }),
@@ -184,8 +174,7 @@ class _EnquetePageState extends State<EnquetePage> {
     return Scaffold(
         body: ValueListenableBuilder(
             valueListenable: _controller.enquete,
-            builder: (context, value, child) => _controller
-                    .enquete.value.isEmpty
+            builder: (context, value, child) => _controller.enquete.value.isEmpty
                 ? const ConfigPage()
                 : Stack(
                     children: [
@@ -200,12 +189,8 @@ class _EnquetePageState extends State<EnquetePage> {
                             children: [
                               Container(
                                 padding: const EdgeInsets.only(top: 120),
-                                child: enquete(
-                                    _controller.enquete.value[index].questao,
-                                    index,
-                                    _controller
-                                        .enquete.value[index].tipoQuestao,
-                                    _enableButton),
+                                child: enquete(_controller.enquete.value[index].questao, index,
+                                    _controller.enquete.value[index].tipoQuestao, _enableButton),
                               ),
                               index >= 1
                                   ? ElevatedButton(
@@ -213,9 +198,7 @@ class _EnquetePageState extends State<EnquetePage> {
                                         respostas.removeLast();
                                         _editingController.clear();
                                         _pageController.previousPage(
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.ease);
+                                            duration: const Duration(milliseconds: 300), curve: Curves.ease);
                                       },
                                       child: const Text('Voltar'))
                                   : Container(),

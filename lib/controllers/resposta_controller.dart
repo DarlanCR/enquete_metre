@@ -2,11 +2,11 @@
 
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
+import 'package:enquete/dio/dio_config.dart';
 import 'package:enquete/models/resposta_model.dart';
 
 class RespostaController {
-  final Dio client;
+  final ApiService client;
 
   RespostaController(this.client);
   postResposta(List<Resposta> enquete) async {
@@ -14,12 +14,10 @@ class RespostaController {
     Map dataMap = {'data': data};
 
     try {
-      await client.post('', data: dataMap);
+      await client.dio.post('', data: dataMap);
       print(jsonEncode(enquete));
     } catch (e) {
       print(e);
-    } finally {
-      client.close();
     }
   }
 }

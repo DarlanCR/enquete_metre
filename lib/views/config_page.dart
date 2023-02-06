@@ -1,11 +1,15 @@
-import 'package:enquete/consts/color.dart';
-import 'package:enquete/dio/dio_config.dart';
-import 'package:enquete/dio/shared_preference.dart';
-import 'package:enquete/models/background_model.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import 'package:enquete/consts/color.dart';
+import 'package:enquete/dio/dio_config.dart';
+import 'package:enquete/models/background_model.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+
+import '../controllers/enquete_controller.dart';
+
 class ConfigPage extends StatefulWidget {
-  const ConfigPage({super.key});
+  const ConfigPage({Key? key}) : super(key: key);
 
   @override
   State<ConfigPage> createState() => _ConfigPageState();
@@ -15,8 +19,8 @@ class _ConfigPageState extends State<ConfigPage> {
   final TextEditingController _controllerIp = TextEditingController();
   final TextEditingController _controllerPorta = TextEditingController();
   final TextEditingController _controllerContexto = TextEditingController();
-  final ApiService _apiService =
-      ApiService(SharedPreferencesHelper().preferences);
+  final ApiService _apiService = Modular.get();
+  final EnqueteController _controller = Modular.get();
   String ip = '';
   String porta = '';
   String contexto = '';
@@ -42,8 +46,7 @@ class _ConfigPageState extends State<ConfigPage> {
                           keyboardType: TextInputType.number,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
+                              enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                               labelText: 'Endereço IP',
                               labelStyle: TextStyle(color: myColor))),
                     ),
@@ -55,8 +58,7 @@ class _ConfigPageState extends State<ConfigPage> {
                           keyboardType: TextInputType.number,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
+                              enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                               labelText: 'Porta',
                               labelStyle: TextStyle(color: myColor))),
                     ),
@@ -69,18 +71,15 @@ class _ConfigPageState extends State<ConfigPage> {
                       controller: _controllerContexto,
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                          enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
+                          enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                           labelText: 'Contexto',
                           labelStyle: TextStyle(color: myColor))),
                 ),
                 ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _apiService.setBaseUrl(
-                            'http://${_controllerIp.text.trim()}:${_controllerPorta.text.trim()}${_controllerContexto.text.trim()}/services/micro/');
-                      });
-                      Navigator.of(context).pushNamed('/');
+                    onPressed: () async {
+                      await _apiService.setBaseUrl(
+                          'http://${_controllerIp.text.trim()}:${_controllerPorta.text.trim()}${_controllerContexto.text.trim()}/services/micro/');
+                      _controller.getEnquete();
                     },
                     child: const Text('Configurar'))
               ],

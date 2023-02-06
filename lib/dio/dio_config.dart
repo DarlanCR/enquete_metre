@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:enquete/dio/shared_preference.dart';
+import 'package:flutter/foundation.dart';
 
 /* class DioClient {
   static final BaseOptions options = BaseOptions(
@@ -12,28 +13,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   /*  static final ApiService _singleton = ApiService._internal(); */
-  static final Dio _dio = Dio();
-  final SharedPreferences prefs;
+  final Dio _dio = Dio();
+  final SharedPreferencesHelper _cacheHelper;
 
-  ApiService(this.prefs) {
+  ApiService(this._cacheHelper) {
     _dio.options.connectTimeout = 10000;
-    _initBaseUrl();
-  }
-
-  Future<void> _initBaseUrl() async {
-    final baseUrl = prefs.getString('baseUrl');
-    if (baseUrl != null) {
-      _dio.options.baseUrl = baseUrl;
-    }
+    // _initBaseUrl();
   }
 
   Future<void> setBaseUrl(String url) async {
-    print(url);
-    await prefs.setString('baseUrl', url);
-    _dio.options.baseUrl = url;
+    debugPrint("Salvando a url: $url");
+    await _cacheHelper.setUrlAPI('baseUrl', url).then((value) {
+      print(value);
+      return _dio.options.baseUrl = url;
+    }).onError((error, stackTrace) {
+      debugPrintStack(stackTrace: stackTrace, label: error.toString());
+      return '';
+    });
   }
 
-  Dio get dio {
-    return _dio;
-  }
+  Dio get dio => _dio;
 }
