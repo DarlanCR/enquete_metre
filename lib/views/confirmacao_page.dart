@@ -16,7 +16,7 @@ class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2))
+    Future.delayed(const Duration(seconds: 1))
         .then((value) => _loadController.isLoad.value = false);
 
     Future.delayed(const Duration(seconds: 8))
