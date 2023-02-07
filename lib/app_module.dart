@@ -1,6 +1,7 @@
 import 'package:enquete/controllers/resposta_controller.dart';
 import 'package:enquete/dio/dio_config.dart';
 import 'package:enquete/dio/shared_preference.dart';
+import 'package:enquete/views/config_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'controllers/enquete_controller.dart';
@@ -21,6 +22,10 @@ class AppModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute('/', child: (context, args) => const EnquetePage()),
-    ChildRoute('/confirmacao', child: (context, args) => const ConfirmacaoPage()),
+    ChildRoute(
+      '/confirmacao',
+      child: (context, args) => const ConfirmacaoPage(),
+    ),
+    ChildRoute('/config', child: (context, args) => const ConfigPage())
   ];
 }

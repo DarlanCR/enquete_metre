@@ -1,5 +1,6 @@
 import 'package:enquete/dio/dio_config.dart';
 import 'package:enquete/models/enquete_model.dart';
+import 'package:enquete/views/config_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -16,7 +17,7 @@ class EnqueteController {
 
   Future<void> loadBaseUrl() async {
     final baseUrl = _cacheHelper.getUrlAPI('baseUrl');
-    print(baseUrl);
+    debugPrint(baseUrl);
     client.dio.options.baseUrl = baseUrl ?? '';
   }
 
@@ -28,6 +29,7 @@ class EnqueteController {
       await Future.delayed(const Duration(seconds: 1));
     } catch (e) {
       debugPrint(e.toString());
+      const ConfigPage();
     }
   }
 }

@@ -1,12 +1,14 @@
+import 'package:enquete/consts/color.dart';
 import 'package:enquete/controllers/enquete_controller.dart';
 import 'package:enquete/controllers/resposta_controller.dart';
 import 'package:enquete/models/background_model.dart';
 import 'package:enquete/models/icon_model.dart';
 import 'package:enquete/models/resposta_model.dart';
-import 'package:enquete/views/config_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+import 'erro_page.dart';
 
 class EnquetePage extends StatefulWidget {
   const EnquetePage({super.key});
@@ -51,7 +53,8 @@ class _EnquetePageState extends State<EnquetePage> {
     if (index < _controller.enquete.value.length - 1) {
       var responseMap = adicionarMap(index);
       respostas.add(responseMap);
-      _pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
 
       _enableButton = false;
       _editingController.clear();
@@ -60,7 +63,18 @@ class _EnquetePageState extends State<EnquetePage> {
       respostas.add(responseMap);
       _respostaController.postResposta(respostas);
       _editingController.clear();
-      Navigator.of(context).pushNamed('/confirmacao');
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
+      Future.delayed(const Duration(seconds: 2))
+          .then((value) => Navigator.of(context).pushNamed('/confirmacao'));
     }
   }
 
@@ -75,9 +89,11 @@ class _EnquetePageState extends State<EnquetePage> {
           itemBuilder: (context, index) {
             switch (index) {
               case 0:
-                return iconRating(Icons.sentiment_very_dissatisfied, Colors.red);
+                return iconRating(
+                    Icons.sentiment_very_dissatisfied, Colors.red);
               case 1:
-                return iconRating(Icons.sentiment_dissatisfied, Colors.redAccent);
+                return iconRating(
+                    Icons.sentiment_dissatisfied, Colors.redAccent);
               case 2:
                 return iconRating(Icons.sentiment_neutral, Colors.amber);
               case 3:
@@ -127,8 +143,9 @@ class _EnquetePageState extends State<EnquetePage> {
           child: TextField(
             controller: _editingController,
             style: const TextStyle(color: Colors.white),
-            decoration:
-                const InputDecoration(enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))),
+            decoration: const InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white))),
             onChanged: (value) => setState(() {
               _enableButton = true;
             }),
@@ -172,41 +189,58 @@ class _EnquetePageState extends State<EnquetePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color.fromRGBO(20, 21, 25, 1),
+        appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(20, 21, 25, 1),
+          elevation: 0,
+          actions: [
+            IconButton(
+                onPressed: () => Navigator.of(context).pushNamed('/config'),
+                icon: Icon(
+                  Icons.settings,
+                  color: myColor,
+                ))
+          ],
+        ),
         body: ValueListenableBuilder(
             valueListenable: _controller.enquete,
-            builder: (context, value, child) => _controller.enquete.value.isEmpty
-                ? const ConfigPage()
-                : Stack(
-                    children: [
-                      backgroundPage(),
-                      Center(
-                        child: PageView.builder(
-                          controller: _pageController,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _controller.enquete.value.length,
-                          itemBuilder: (context, index) => Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.only(top: 120),
-                                child: enquete(_controller.enquete.value[index].questao, index,
-                                    _controller.enquete.value[index].tipoQuestao, _enableButton),
-                              ),
-                              index >= 1
-                                  ? ElevatedButton(
-                                      onPressed: () {
-                                        respostas.removeLast();
-                                        _editingController.clear();
-                                        _pageController.previousPage(
-                                            duration: const Duration(milliseconds: 300), curve: Curves.ease);
-                                      },
-                                      child: const Text('Voltar'))
-                                  : Container(),
-                            ],
+            builder: (context, value, child) => _controller
+                    .enquete.value.isEmpty
+                ? const ErroPage()
+                : BackgroundPage(
+                    page: PageView.builder(
+                      controller: _pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _controller.enquete.value.length,
+                      itemBuilder: (context, index) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          WillPopScope(
+                            child: Container(
+                              child: enquete(
+                                  _controller.enquete.value[index].questao,
+                                  index,
+                                  _controller.enquete.value[index].tipoQuestao,
+                                  _enableButton),
+                            ),
+                            onWillPop: () async => false,
                           ),
-                        ),
+                          index >= 1
+                              ? ElevatedButton(
+                                  onPressed: () {
+                                    respostas.removeLast();
+                                    _editingController.clear();
+                                    _pageController.previousPage(
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        curve: Curves.ease);
+                                  },
+                                  child: const Icon(
+                                      Icons.arrow_back_ios_new_rounded))
+                              : Container(),
+                        ],
                       ),
-                    ],
+                    ),
                   )));
   }
 }

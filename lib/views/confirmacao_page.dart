@@ -12,47 +12,48 @@ class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(
-        const Duration(seconds: 8), () => Navigator.of(context).pushNamed('/'));
+
+    Future.delayed(const Duration(seconds: 8), () {
+      showDialog(
+        context: context,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      ).then((value) => Navigator.of(context).pushNamed('/'));
+      /*  Navigator.of(context).pushNamed('/'); */
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        backgroundPage(),
-        const Center(
-          child: Icon(
-            Icons.sentiment_satisfied_outlined,
-            color: Color.fromARGB(255, 27, 51, 78),
-            size: 500,
-          ),
-        ),
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'Muito Obrigado!',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold),
+        body: BackgroundPage(
+      page: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.check_circle_outline,
+              color: Colors.green,
+              size: 100,
+            ),
+            Text(
+              'Muito Obrigado!',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Text(
+                'A sua opinião é muito importante para nós',
+                style: TextStyle(color: Colors.white, fontSize: 20),
                 textAlign: TextAlign.center,
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text(
-                  'A sua opinião é muito importante para nós',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     ));
   }
 }

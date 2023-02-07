@@ -24,7 +24,7 @@ class ApiService {
   Future<void> setBaseUrl(String url) async {
     debugPrint("Salvando a url: $url");
     await _cacheHelper.setUrlAPI('baseUrl', url).then((value) {
-      print(value);
+      debugPrint('$value');
       return _dio.options.baseUrl = url;
     }).onError((error, stackTrace) {
       debugPrintStack(stackTrace: stackTrace, label: error.toString());
