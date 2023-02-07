@@ -4,11 +4,10 @@ import 'package:enquete/controllers/resposta_controller.dart';
 import 'package:enquete/models/background_model.dart';
 import 'package:enquete/models/icon_model.dart';
 import 'package:enquete/models/resposta_model.dart';
+import 'package:enquete/views/erro_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-import 'erro_page.dart';
 
 class EnquetePage extends StatefulWidget {
   const EnquetePage({super.key});
@@ -63,18 +62,8 @@ class _EnquetePageState extends State<EnquetePage> {
       respostas.add(responseMap);
       _respostaController.postResposta(respostas);
       _editingController.clear();
-
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      );
-
-      Future.delayed(const Duration(seconds: 2))
-          .then((value) => Navigator.of(context).pushNamed('/confirmacao'));
+      Navigator.of(context).pushNamed('/confirmacao');
+      _controller.isLoad.value = true;
     }
   }
 
@@ -202,12 +191,71 @@ class _EnquetePageState extends State<EnquetePage> {
                 ))
           ],
         ),
-        body: ValueListenableBuilder(
+        body: AnimatedBuilder(
+            animation:
+                Listenable.merge([_controller.enquete, _controller.isLoad]),
+            builder: (context, child) {
+              if (_controller.enquete.value.isNotEmpty &&
+                  _controller.isLoad.value == false) {
+                return BackgroundPage(
+                  page: PageView.builder(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _controller.enquete.value.length,
+                    itemBuilder: (context, index) => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        WillPopScope(
+                          child: Container(
+                            child: enquete(
+                                _controller.enquete.value[index].questao,
+                                index,
+                                _controller.enquete.value[index].tipoQuestao,
+                                _enableButton),
+                          ),
+                          onWillPop: () async => false,
+                        ),
+                        index >= 1
+                            ? ElevatedButton(
+                                onPressed: () {
+                                  respostas.removeLast();
+                                  _editingController.clear();
+                                  _pageController.previousPage(
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.ease);
+                                },
+                                child: const Icon(
+                                    Icons.arrow_back_ios_new_rounded))
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                );
+              } else if (_controller.isLoad.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                const ErroPage();
+              }
+              return Container();
+            }));
+  }
+}
+
+
+/* 
+ValueListenableBuilder(
             valueListenable: _controller.enquete,
             builder: (context, value, child) => _controller
                     .enquete.value.isEmpty
                 ? const ErroPage()
-                : BackgroundPage(
+                : 
+
+
+
+BackgroundPage(
                     page: PageView.builder(
                       controller: _pageController,
                       physics: const NeverScrollableScrollPhysics(),
@@ -241,6 +289,4 @@ class _EnquetePageState extends State<EnquetePage> {
                         ],
                       ),
                     ),
-                  )));
-  }
-}
+                  ) */

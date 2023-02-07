@@ -10,6 +10,7 @@ import '../dio/shared_preference.dart';
 
 class EnqueteController {
   ValueNotifier<List<Enquete>> enquete = ValueNotifier<List<Enquete>>([]);
+  ValueNotifier<bool> isLoad = ValueNotifier<bool>(false);
   final ApiService client;
   final SharedPreferencesHelper _cacheHelper = Modular.get();
 
@@ -23,6 +24,7 @@ class EnqueteController {
 
   getEnquete() async {
     try {
+      isLoad.value = true;
       final response = await client.dio.get('enquete');
       final decodeResponse = response.data as List;
       enquete.value = decodeResponse.map((e) => Enquete.fromMap(e)).toList();
@@ -30,6 +32,8 @@ class EnqueteController {
     } catch (e) {
       debugPrint(e.toString());
       const ConfigPage();
+    } finally {
+      isLoad.value = false;
     }
   }
 }

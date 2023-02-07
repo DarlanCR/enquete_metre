@@ -105,11 +105,13 @@ class _ConfigPageState extends State<ConfigPage> {
                 ],
               ),
               ElevatedButton(
-                  onPressed: () async {
-                    await _apiService.setBaseUrl(
+                  onPressed: () {
+                    _apiService.setBaseUrl(
                         'http://${_controllerIp.text.trim()}:${_controllerPorta.text.trim()}${_controllerContexto.text.trim()}/services/micro/');
                     _controller.getEnquete();
                     debugPrint(_apiService.dio.toString());
+
+                    Navigator.of(context).pushNamed('/');
                   },
                   child: const Text('Configurar'))
             ],
