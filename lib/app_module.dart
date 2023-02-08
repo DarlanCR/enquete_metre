@@ -2,6 +2,7 @@ import 'package:enquete/controllers/resposta_controller.dart';
 import 'package:enquete/dio/dio_config.dart';
 import 'package:enquete/dio/shared_preference.dart';
 import 'package:enquete/views/config_page.dart';
+import 'package:enquete/views/erro_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'controllers/enquete_controller.dart';
@@ -26,6 +27,7 @@ class AppModule extends Module {
       '/confirmacao',
       child: (context, args) => const ConfirmacaoPage(),
     ),
-    ChildRoute('/config', child: (context, args) => const ConfigPage())
+    ChildRoute('/config', child: (context, args) => const ConfigPage()),
+    ChildRoute('/erro', child: (context, args) => const ErroPage())
   ];
 }

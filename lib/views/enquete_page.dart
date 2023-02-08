@@ -4,7 +4,6 @@ import 'package:enquete/controllers/resposta_controller.dart';
 import 'package:enquete/models/background_model.dart';
 import 'package:enquete/models/icon_model.dart';
 import 'package:enquete/models/resposta_model.dart';
-import 'package:enquete/views/erro_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -34,7 +33,7 @@ class _EnquetePageState extends State<EnquetePage> {
   }
 
   load() async {
-    await Future.delayed(const Duration(seconds: 2));
+    /*  await Future.delayed(const Duration(seconds: 2)); */
     await _controller.loadBaseUrl();
     await _controller.getEnquete();
   }
@@ -62,8 +61,7 @@ class _EnquetePageState extends State<EnquetePage> {
       respostas.add(responseMap);
       _respostaController.postResposta(respostas);
       _editingController.clear();
-      Navigator.of(context).pushNamed('/confirmacao');
-      _controller.isLoad.value = true;
+      Modular.to.pushNamed('/confirmacao');
     }
   }
 
@@ -192,11 +190,16 @@ class _EnquetePageState extends State<EnquetePage> {
           ],
         ),
         body: AnimatedBuilder(
-            animation:
-                Listenable.merge([_controller.enquete, _controller.isLoad]),
+            animation: Listenable.merge(
+                [_controller.enquete, _controller.isLoad, _controller.onError]),
             builder: (context, child) {
-              if (_controller.enquete.value.isNotEmpty &&
-                  _controller.isLoad.value == false) {
+              if (_controller.isLoad.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (_controller.onError.value) {
+                Modular.to.pushReplacementNamed('/erro');
+              } else {
                 return BackgroundPage(
                   page: PageView.builder(
                     controller: _pageController,
@@ -232,12 +235,6 @@ class _EnquetePageState extends State<EnquetePage> {
                     ),
                   ),
                 );
-              } else if (_controller.isLoad.value) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                const ErroPage();
               }
               return Container();
             }));

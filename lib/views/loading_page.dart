@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 
 enum Rota { enquete, confirmacao }
 
-class LoadingPage extends StatefulWidget {
-  const LoadingPage({super.key});
-
-  @override
-  State<LoadingPage> createState() => _LoadingPageState();
-}
-
-class _LoadingPageState extends State<LoadingPage> {
+class LoadingPage extends StatelessWidget {
   Rota? _rota;
+
+  LoadingPage({super.key});
 
   definirRota() {
     switch (_rota) {
@@ -21,13 +16,6 @@ class _LoadingPageState extends State<LoadingPage> {
       case null:
         return '/config';
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(seconds: 1))
-        .then((value) => Navigator.of(context).pushNamed(definirRota()));
   }
 
   @override

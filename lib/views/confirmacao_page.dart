@@ -16,11 +16,8 @@ class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1))
-        .then((value) => _loadController.isLoad.value = false);
-
-    Future.delayed(const Duration(seconds: 8))
-        .then((value) => Navigator.of(context).pushNamed('/'));
+    Future.delayed(const Duration(seconds: 3))
+        .then((value) => Modular.to.pushReplacementNamed('/'));
   }
 
   @override
@@ -49,13 +46,10 @@ class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Text(
-                          'A sua opinião é muito importante para nós',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                          textAlign: TextAlign.center,
-                        ),
+                      Text(
+                        'A sua opinião é muito importante para nós',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   )),

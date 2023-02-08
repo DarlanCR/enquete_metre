@@ -1,5 +1,6 @@
 import 'package:enquete/models/background_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class ErroPage extends StatefulWidget {
   const ErroPage({super.key});
@@ -34,7 +35,7 @@ class _ErroPageState extends State<ErroPage> {
                 textAlign: TextAlign.center,
               ),
               Text(
-                'Você não possui enquete cadastrada',
+                'Enquete não cadastrada',
                 style: TextStyle(color: Colors.white, fontSize: 20),
                 textAlign: TextAlign.center,
               ),
@@ -43,7 +44,7 @@ class _ErroPageState extends State<ErroPage> {
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pushNamed('/'),
+                onPressed: () => Modular.to.navigate('/'),
                 child: const Text('Tentar novamente')),
           ),
         ],
