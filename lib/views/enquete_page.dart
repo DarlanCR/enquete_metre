@@ -143,7 +143,7 @@ class _EnquetePageState extends State<EnquetePage> {
   enquete(String text, int index, String questao, bool enableButton) {
     return Center(
       child: SizedBox(
-        height: 500,
+        height: 470,
         width: 450,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

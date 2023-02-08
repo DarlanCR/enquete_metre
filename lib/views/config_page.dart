@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
 import 'package:enquete/consts/color.dart';
@@ -24,11 +23,10 @@ class _ConfigPageState extends State<ConfigPage> {
   final ApiService _apiService = Modular.get();
   final EnqueteController _controller = Modular.get();
 
-  Contexto? _contexto = Contexto.homologacao;
+  Contexto? _contexto;
 
   @override
   Widget build(BuildContext context) {
-    _controllerContexto.text = '/app';
     return Scaffold(
       body: BackgroundPage(
         page: Center(
@@ -72,7 +70,9 @@ class _ConfigPageState extends State<ConfigPage> {
                     width: 200,
                     child: ListTile(
                       title: const Text('Homologação',
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(
+                            color: Colors.white,
+                          )),
                       leading: Radio<Contexto>(
                         value: Contexto.homologacao,
                         groupValue: _contexto,
@@ -97,6 +97,7 @@ class _ConfigPageState extends State<ConfigPage> {
                           setState(() {
                             _contexto = value;
                             _controllerContexto.text = '';
+                            debugPrint(_controllerContexto.text);
                           });
                         },
                       ),

@@ -16,7 +16,7 @@ class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3))
+    Future.delayed(const Duration(seconds: 8))
         .then((value) => Modular.to.pushReplacementNamed('/'));
   }
 
